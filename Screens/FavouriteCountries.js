@@ -7,7 +7,7 @@ const FavouriteCountries = ({ navigation }) => {
 			<Text>Favourite Countries</Text>
 			<Button
 				title="country"
-				onPress={() => navigation.navigate("CountryStats")}
+				onPress={() => navigation.navigate("Country Stats")}
 			/>
 		</View>
 	);
