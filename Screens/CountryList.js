@@ -5,11 +5,13 @@ import {
 	TouchableOpacity,
 	FlatList,
 	ActivityIndicator,
+	TextInput,
 } from "react-native";
 
 const CountryList = ({ navigation }) => {
 	const [countryList, setCountryList] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [searchCountry, setSearchCountry] = useState([]);
 
 	const getCountryList = async () => {
 		const response = await fetch(
@@ -29,13 +31,22 @@ const CountryList = ({ navigation }) => {
 			countries = [...countries, { id: countries.length, country: item }];
 		});
 		setCountryList(countries);
+		setSearchCountry(countries);
 		setIsLoading(false);
-		// console.log(countryList);
 	};
 
 	useEffect(() => {
 		getCountryList();
-	}, countryList);
+	}, []);
+
+	const searchCountries = (text) => {
+		const newData = searchCountry.filter((item) => {
+			const itemData = item.country;
+			const textData = text.charAt(0).toUpperCase() + text.slice(1);
+			return itemData.indexOf(textData) > -1;
+		});
+		setCountryList(newData);
+	};
 
 	if (isLoading) {
 		return (
@@ -47,6 +58,10 @@ const CountryList = ({ navigation }) => {
 		return (
 			<View>
 				<Text>Country List</Text>
+				<TextInput
+					placeholder="Search Countries"
+					onChangeText={(text) => searchCountries(text)}
+				/>
 				{countryList && (
 					<FlatList
 						keyExtractor={(item) => item.id.toString()}
