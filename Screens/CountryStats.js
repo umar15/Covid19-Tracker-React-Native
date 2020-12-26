@@ -5,6 +5,7 @@ const CountryStats = ({ route }) => {
 	const country = route.params.country;
 	const [countryData, setCountryData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [population, setPopulation] = useState(0);
 
 	const getCountryData = async () => {
 		const url = "https://covid-19-data.p.rapidapi.com/country?name=";
@@ -17,7 +18,6 @@ const CountryStats = ({ route }) => {
 			},
 		});
 		const data = await response.json();
-		console.log(data[0].confirmed);
 		const newData = {
 			confirmed: data[0].confirmed,
 			recovered: data[0].recovered,
@@ -29,8 +29,26 @@ const CountryStats = ({ route }) => {
 		setIsLoading(false);
 	};
 
+	const getCountryPopulation = async () => {
+		const countryPopulation = await fetch(
+			`https://world-population.p.rapidapi.com/population?country_name=${country}`,
+			{
+				method: "GET",
+				headers: {
+					"x-rapidapi-key":
+						"6855cf7242msh879a563e0d43b0dp12a354jsn5a0fefe10680",
+					"x-rapidapi-host": "world-population.p.rapidapi.com",
+				},
+			}
+		);
+		const populationData = await countryPopulation.json();
+		// console.log(population);
+		setPopulation(populationData.body.population);
+	};
+
 	useEffect(() => {
 		getCountryData();
+		getCountryPopulation();
 	}, []);
 
 	if (isLoading) {
@@ -45,10 +63,52 @@ const CountryStats = ({ route }) => {
 				<Text>{country} stats</Text>
 				{countryData && (
 					<View>
-						<Text>Confirmed: {countryData.confirmed}</Text>
-						<Text>deaths: {countryData.deaths}</Text>
-						<Text>critical: {countryData.critical}</Text>
-						<Text>recovered: {countryData.recovered}</Text>
+						<Text>
+							Confirmed: {countryData.confirmed}{" "}
+							{countryData.confirmed && (
+								<Text>
+									Confrmed %:{" "}
+									{(
+										(countryData.confirmed / population) *
+										100
+									).toFixed(2)}
+								</Text>
+							)}
+						</Text>
+						<Text>
+							deaths: {countryData.deaths}
+							{countryData.deaths && (
+								<Text>
+									Deaths %:{" "}
+									{((countryData.deaths / population) * 100).toFixed(
+										2
+									)}
+								</Text>
+							)}
+						</Text>
+						<Text>
+							critical: {countryData.critical}
+							{countryData.critical && (
+								<Text>
+									Critical %:{" "}
+									{((countryData.critical / population) * 100).toFixed(
+										2
+									)}
+								</Text>
+							)}
+						</Text>
+						<Text>
+							recovered: {countryData.recovered}
+							{countryData.recovered && (
+								<Text>
+									Recovered %:{" "}
+									{(
+										(countryData.recovered / population) *
+										100
+									).toFixed(2)}
+								</Text>
+							)}
+						</Text>
 					</View>
 				)}
 			</View>
