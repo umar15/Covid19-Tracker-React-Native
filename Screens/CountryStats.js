@@ -1,10 +1,11 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-const CountryStats = () => {
+const CountryStats = ({ route }) => {
+	const country = route.params.country;
 	return (
 		<View>
-			<Text>COuntry Stats</Text>
+			<Text>{country} Stats</Text>
 		</View>
 	);
 };
