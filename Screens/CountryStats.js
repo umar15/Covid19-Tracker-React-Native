@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator, StyleSheet, Alert } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Card } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -9,23 +9,34 @@ const CountryStats = ({ route, navigation }) => {
 	const [countryData, setCountryData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [population, setPopulation] = useState(0);
+	const [save, setSave] = useState("delete");
 
 	const saveCountry = async () => {
-		await AsyncStorage.setItem(`@${country}key`, country);
-		Alert.alert(
-			"Saving Done!",
-			`${country} saved in favourite countries`,
-			[{ text: "OK", onPress: () => console.log("OK Pressed") }],
-			{ cancelable: false }
-		);
+		if (save === "delete") {
+			await AsyncStorage.setItem(`@${country}key`, country);
+			Alert.alert(
+				"Saving Done!",
+				`${country} saved in favourite countries`,
+				[{ text: "OK", onPress: () => setSave("success") }],
+				{ cancelable: false }
+			);
+		} else {
+			await AsyncStorage.removeItem(`@${country}key`);
+			Alert.alert(
+				"Saving Done!",
+				`${country} removed from favourite countries`,
+				[{ text: "OK", onPress: () => setSave("delete") }],
+				{ cancelable: false }
+			);
+		}
 	};
 
 	React.useLayoutEffect(() => {
 		navigation.setOptions({
 			headerRight: () => (
 				<View style={{ margin: 18 }}>
-					<MaterialIcons
-						name="favorite-border"
+					<Ionicons
+						name="heart-sharp"
 						size={24}
 						color="black"
 						onPress={saveCountry}

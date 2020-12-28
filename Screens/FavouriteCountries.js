@@ -5,6 +5,7 @@ import {
 	FlatList,
 	TouchableOpacity,
 	StyleSheet,
+	Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ListItem } from "react-native-elements";
@@ -56,22 +57,32 @@ const FavouriteCountries = ({ navigation }) => {
 											<View
 												style={{
 													flexDirection: "row",
-													justifyContent: "space-around",
+													justifyContent: "space-between",
 												}}
 											>
 												<ListItem.Title>{country}</ListItem.Title>
-												<Ionicons
-													name="heart-sharp"
-													size={24}
-													color="red"
-													onPress={() =>
-														AsyncStorage.removeItem(
-															`@${country}key`
-														)
-													}
-												/>
 											</View>
 										</ListItem.Content>
+										<Ionicons
+											name="heart-sharp"
+											size={24}
+											color="red"
+											onPress={() => {
+												AsyncStorage.removeItem(`@${country}key`);
+												Alert.alert(
+													"removing Done!",
+													`${country} removed from favourite countries`,
+													[
+														{
+															text: "OK",
+															onPress: () =>
+																console.log("OK Pressed"),
+														},
+													],
+													{ cancelable: false }
+												);
+											}}
+										/>
 									</ListItem>
 								</TouchableOpacity>
 							);

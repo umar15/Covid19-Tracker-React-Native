@@ -53,7 +53,11 @@ const CountryList = ({ navigation }) => {
 	if (isLoading) {
 		return (
 			<View>
-				<ActivityIndicator size="large" color="blue" />
+				<ActivityIndicator
+					size="large"
+					color="blue"
+					style={{ marginTop: 20 }}
+				/>
 			</View>
 		);
 	} else {
