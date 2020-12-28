@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ListItem } from "react-native-elements";
 import {
 	View,
 	Text,
@@ -6,6 +7,7 @@ import {
 	FlatList,
 	ActivityIndicator,
 	TextInput,
+	StyleSheet,
 } from "react-native";
 
 const CountryList = ({ navigation }) => {
@@ -57,8 +59,9 @@ const CountryList = ({ navigation }) => {
 	} else {
 		return (
 			<View>
-				<Text>Country List</Text>
+				<Text style={styles.headerStyles}>Country List</Text>
 				<TextInput
+					style={styles.searchStyles}
 					placeholder="Search Countries"
 					onChangeText={(text) => searchCountries(text)}
 				/>
@@ -74,7 +77,12 @@ const CountryList = ({ navigation }) => {
 										navigation.navigate("Country Stats", { country })
 									}
 								>
-									<Text>{country}</Text>
+									<ListItem bottomDivider>
+										<ListItem.Content>
+											<ListItem.Title>{country}</ListItem.Title>
+										</ListItem.Content>
+										<ListItem.Chevron />
+									</ListItem>
 								</TouchableOpacity>
 							);
 						}}
@@ -84,5 +92,25 @@ const CountryList = ({ navigation }) => {
 		);
 	}
 };
+
+const styles = StyleSheet.create({
+	searchStyles: {
+		borderWidth: 1,
+		borderColor: "grey",
+		width: "100%",
+		padding: 6,
+		marginTop: 10,
+		borderRadius: 5,
+		alignItems: "center",
+	},
+	headerStyles: {
+		textAlign: "center",
+		alignItems: "center",
+		padding: 5,
+		marginTop: 5,
+		fontSize: 25,
+		fontWeight: "bold",
+	},
+});
 
 export default CountryList;

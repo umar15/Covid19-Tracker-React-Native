@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Card } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CountryStats = ({ route, navigation }) => {
@@ -77,66 +78,127 @@ const CountryStats = ({ route, navigation }) => {
 	if (isLoading) {
 		return (
 			<View>
-				<ActivityIndicator size="large" color="blue" />
+				<ActivityIndicator
+					size="large"
+					color="blue"
+					style={{ marginTop: 20 }}
+				/>
 			</View>
 		);
 	} else {
 		return (
 			<View>
-				<Text>{country} stats</Text>
+				<Text style={styles.headerStyles}>{country} stats</Text>
 				{countryData && (
 					<View>
-						<Text>
-							Confirmed: {countryData.confirmed}{" "}
-							{countryData.confirmed && (
-								<Text>
-									Confrmed %:{" "}
-									{(
-										(countryData.confirmed / population) *
-										100
-									).toFixed(2)}
-								</Text>
-							)}
-						</Text>
-						<Text>
-							deaths: {countryData.deaths}
-							{countryData.deaths && (
-								<Text>
-									Deaths %:{" "}
-									{((countryData.deaths / population) * 100).toFixed(
-										2
-									)}
-								</Text>
-							)}
-						</Text>
-						<Text>
-							critical: {countryData.critical}
-							{countryData.critical && (
-								<Text>
-									Critical %:{" "}
-									{((countryData.critical / population) * 100).toFixed(
-										2
-									)}
-								</Text>
-							)}
-						</Text>
-						<Text>
-							recovered: {countryData.recovered}
-							{countryData.recovered && (
-								<Text>
-									Recovered %:{" "}
-									{(
-										(countryData.recovered / population) *
-										100
-									).toFixed(2)}
-								</Text>
-							)}
-						</Text>
+						<View style={styles.statsStyles}>
+							<Card
+								containerStyle={{
+									width: "40%",
+									borderBottomColor: "blue",
+									borderBottomWidth: 10,
+								}}
+							>
+								<Card.Title>Confirmed</Card.Title>
+								<Card.Divider />
+								<View style={{ flexDirection: "column" }}>
+									<Text>{countryData.confirmed}</Text>
+									<Text>
+										{(
+											(countryData.confirmed / population) *
+											100
+										).toFixed(2)}
+										%
+									</Text>
+								</View>
+							</Card>
+							<Card
+								containerStyle={{
+									width: "40%",
+									borderBottomColor: "red",
+									borderBottomWidth: 10,
+								}}
+							>
+								<Card.Title>Deaths</Card.Title>
+								<Card.Divider />
+								<View style={{ flexDirection: "column" }}>
+									<Text>{countryData.deaths}</Text>
+									<Text>
+										{(
+											(countryData.deaths / countryData.confirmed) *
+											100
+										).toFixed(2)}
+										%
+									</Text>
+								</View>
+							</Card>
+						</View>
+
+						<View style={styles.statsStyles}>
+							<Card
+								containerStyle={{
+									width: "40%",
+									borderBottomColor: "purple",
+									borderBottomWidth: 10,
+								}}
+							>
+								<Card.Title>Critical</Card.Title>
+								<Card.Divider />
+								<View style={{ flexDirection: "column" }}>
+									<Text>{countryData.critical}</Text>
+									<Text>
+										{(
+											(countryData.critical /
+												countryData.confirmed) *
+											100
+										).toFixed(2)}
+										%
+									</Text>
+								</View>
+							</Card>
+							<Card
+								containerStyle={{
+									width: "40%",
+									borderBottomColor: "green",
+									borderBottomWidth: 10,
+								}}
+							>
+								<Card.Title>Recovered</Card.Title>
+								<Card.Divider />
+								<View style={{ flexDirection: "column" }}>
+									<Text>{countryData.recovered}</Text>
+									<Text>
+										{(
+											(countryData.recovered /
+												countryData.confirmed) *
+											100
+										).toFixed(2)}
+										%
+									</Text>
+								</View>
+							</Card>
+						</View>
 					</View>
 				)}
 			</View>
 		);
 	}
 };
+
+const styles = StyleSheet.create({
+	headerStyles: {
+		textAlign: "center",
+		alignItems: "center",
+		padding: 5,
+		marginTop: 5,
+		fontSize: 25,
+		fontWeight: "bold",
+	},
+	statsStyles: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "center",
+	},
+});
 
 export default CountryStats;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { Card } from "react-native-elements";
 
 const WorldStats = () => {
 	const [GlobalStats, setGlobalStats] = useState([]);
@@ -27,6 +28,7 @@ const WorldStats = () => {
 			lastUpdate: new Date(data[0].lastUpdate).toDateString(),
 		};
 		setGlobalStats(newData);
+		setIsLoading(false);
 	};
 
 	const getGlobalPopulation = async () => {
@@ -50,56 +52,156 @@ const WorldStats = () => {
 		getGlobalPopulation();
 	}, []);
 
+	if (isLoading) {
+		return (
+			<View>
+				<ActivityIndicator
+					style={{ marginTop: 20 }}
+					size="large"
+					color="blue"
+				/>
+			</View>
+		);
+	}
+
 	return (
 		<View>
-			<Text>World Stats</Text>
+			<Text style={styles.headerStyles}>Global Stats</Text>
 			<View>
-				<Text>
-					Confirmed: {GlobalStats.confirmed}{" "}
-					{GlobalStats.confirmed && (
-						<Text>
-							Confrmed %:{" "}
-							{((GlobalStats.confirmed / worldPopulation) * 100).toFixed(
-								2
-							)}
-						</Text>
-					)}
-				</Text>
-				<Text>
-					deaths: {GlobalStats.deaths}{" "}
-					{GlobalStats.deaths && (
-						<Text>
-							Deaths %:{" "}
-							{((GlobalStats.deaths / worldPopulation) * 100).toFixed(2)}
-						</Text>
-					)}
-				</Text>
-				<Text>
-					critical: {GlobalStats.critical}{" "}
-					{GlobalStats.critical && (
-						<Text>
-							Critical %:{" "}
-							{((GlobalStats.critical / worldPopulation) * 100).toFixed(
-								2
-							)}
-						</Text>
-					)}
-				</Text>
-				<Text>
-					recovered: {GlobalStats.recovered}{" "}
-					{GlobalStats.recovered && (
-						<Text>
-							Recovered %:{" "}
-							{((GlobalStats.recovered / worldPopulation) * 100).toFixed(
-								2
-							)}
-						</Text>
-					)}
-				</Text>
-				<Text>lastUpdate: {GlobalStats.lastUpdate}</Text>
+				<View style={styles.statsStyles}>
+					<Card
+						containerStyle={{
+							width: "40%",
+							borderBottomColor: "blue",
+							borderBottomWidth: 10,
+						}}
+					>
+						<Card.Title>Confirmed</Card.Title>
+						<Card.Divider />
+						<View style={{ flexDirection: "column" }}>
+							<Text>{GlobalStats.confirmed}</Text>
+							<Text>
+								{GlobalStats.confirmed && (
+									<Text>
+										{(
+											(GlobalStats.confirmed / worldPopulation) *
+											100
+										).toFixed(2)}
+										%
+									</Text>
+								)}
+							</Text>
+						</View>
+					</Card>
+					<Card
+						containerStyle={{
+							width: "40%",
+							borderBottomColor: "red",
+							borderBottomWidth: 10,
+						}}
+					>
+						<Card.Title>Deaths</Card.Title>
+						<Card.Divider />
+						<View style={{ flexDirection: "column" }}>
+							<Text>{GlobalStats.deaths}</Text>
+							<Text>
+								{GlobalStats.deaths && (
+									<Text>
+										{(
+											(GlobalStats.deaths / GlobalStats.confirmed) *
+											100
+										).toFixed(2)}
+										%
+									</Text>
+								)}
+							</Text>
+						</View>
+					</Card>
+				</View>
+				<View style={styles.statsStyles}>
+					<Card
+						containerStyle={{
+							width: "40%",
+							borderBottomColor: "purple",
+							borderBottomWidth: 10,
+						}}
+					>
+						<Card.Title>Critical</Card.Title>
+						<Card.Divider />
+						<View style={{ flexDirection: "column" }}>
+							<Text>{GlobalStats.critical}</Text>
+							<Text>
+								{GlobalStats.critical && (
+									<Text>
+										{(
+											(GlobalStats.critical /
+												GlobalStats.confirmed) *
+											100
+										).toFixed(2)}
+										%
+									</Text>
+								)}
+							</Text>
+						</View>
+					</Card>
+					<Card
+						containerStyle={{
+							width: "40%",
+							borderBottomColor: "green",
+							borderBottomWidth: 10,
+						}}
+					>
+						<Card.Title>Recovered</Card.Title>
+						<Card.Divider />
+						<View style={{ flexDirection: "column" }}>
+							<Text>{GlobalStats.recovered}</Text>
+							<Text>
+								{GlobalStats.recovered && (
+									<Text>
+										{(
+											(GlobalStats.recovered /
+												GlobalStats.confirmed) *
+											100
+										).toFixed(2)}
+										%
+									</Text>
+								)}
+							</Text>
+						</View>
+					</Card>
+				</View>
+				<View>
+					<Card
+						containerStyle={{
+							width: "88%",
+							marginTop: 15,
+							marginLeft: "6%",
+						}}
+					>
+						<Card.Title>Last Updated</Card.Title>
+						<Card.Divider />
+						<Text>{GlobalStats.lastUpdate}</Text>
+					</Card>
+				</View>
 			</View>
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	headerStyles: {
+		textAlign: "center",
+		alignItems: "center",
+		padding: 5,
+		marginTop: 5,
+		fontSize: 25,
+		fontWeight: "bold",
+	},
+	statsStyles: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "center",
+	},
+});
 
 export default WorldStats;
