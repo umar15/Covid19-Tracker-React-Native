@@ -1,11 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const CountryStats = ({ route }) => {
+const CountryStats = ({ route, navigation }) => {
 	const country = route.params.country;
 	const [countryData, setCountryData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [population, setPopulation] = useState(0);
+
+	const saveCountry = async () => {
+		console.log("saving");
+		await AsyncStorage.setItem(`@${country}key`, country);
+		console.log("saving done");
+	};
+
+	React.useLayoutEffect(() => {
+		navigation.setOptions({
+			headerRight: () => (
+				<View style={{ margin: 18 }}>
+					<MaterialIcons
+						name="favorite-border"
+						size={24}
+						color="black"
+						onPress={saveCountry}
+					/>
+				</View>
+			),
+		});
+	}, []);
 
 	const getCountryData = async () => {
 		const url = "https://covid-19-data.p.rapidapi.com/country?name=";
