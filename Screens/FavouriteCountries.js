@@ -1,90 +1,99 @@
-// import React, { useEffect, useState } from "react";
-// import { View, Text, Button, FlatList, TouchableOpacity } from "react-native";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import {
+	View,
+	Text,
+	FlatList,
+	TouchableOpacity,
+	StyleSheet,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ListItem } from "react-native-elements";
+import { Ionicons } from "@expo/vector-icons";
 
-// const FavouriteCountries = ({ navigation }) => {
-// 	const [favCountries, setFavCountries] = useState([]);
-// 	const [isLoading, setIsLoading] = useState(false);
+const FavouriteCountries = ({ navigation }) => {
+	const [favCountries, setFavCountries] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 
-// 	const getKeys = async () => {
-// 		const keys = await AsyncStorage.getAllKeys();
-// 		const result = await AsyncStorage.multiGet(keys);
-// 		// console.log(result);
-// 		var countries = [];
-// 		result.map((key) => {
-// 			// const countryName = JSON.parse(key);
-// 			// console.log(countryName);
-// 			// console.log(key[1]);
-// 			countries = [
-// 				...countries,
-// 				{
-// 					id: countries.length,
-// 					country: key[1],
-// 				},
-// 			];
-// 		});
-// 		setFavCountries(countries);
-// 		setIsLoading(true);
-// 	};
+	const getKeys = async () => {
+		const keys = await AsyncStorage.getAllKeys();
+		const result = await AsyncStorage.multiGet(keys);
+		var countries = [];
+		result.map((key) => {
+			countries = [
+				...countries,
+				{
+					id: countries.length,
+					country: key[1],
+				},
+			];
+		});
+		setFavCountries(countries);
+		setIsLoading(true);
+	};
 
-// 	useEffect(() => {
-// 		getKeys();
-// 	}, []);
+	useEffect(() => {
+		getKeys();
+	});
 
-// 	return (
-// 		<View>
-// 			<Text>Favourite Countries</Text>
-// 			{isLoading && (
-// 				<Text>
-// 					<Text>Start</Text>
-// 					{favCountries.map((item) => (
-// 						<TouchableOpacity
-// 							key={item.id}
-// 							onPress={navigation.navigate("Country Stats", {
-// 								country: item.country,
-// 							})}
-// 						>
-// 							<View>
-// 								<Text>{item.country}</Text>
-// 							</View>
-// 						</TouchableOpacity>
-// 					))}
-// 					<Text>End</Text>
-// 				</Text>
-// 			)}
+	return (
+		<View>
+			<Text style={styles.headerStyles}>Favourite Countries</Text>
+			{isLoading && (
+				<View style={{ flexDirection: "column" }}>
+					<FlatList
+						keyExtractor={(item) => item.id.toString()}
+						data={favCountries}
+						renderItem={({ item }) => {
+							const { country } = item;
+							return (
+								<TouchableOpacity
+									onPress={() =>
+										navigation.navigate("Country Stats", { country })
+									}
+								>
+									<ListItem bottomDivider>
+										<ListItem.Content>
+											<View
+												style={{
+													flexDirection: "row",
+													justifyContent: "space-around",
+												}}
+											>
+												<ListItem.Title>{country}</ListItem.Title>
+												<Ionicons
+													name="heart-sharp"
+													size={24}
+													color="red"
+													onPress={() =>
+														AsyncStorage.removeItem(
+															`@${country}key`
+														)
+													}
+												/>
+											</View>
+										</ListItem.Content>
+									</ListItem>
+								</TouchableOpacity>
+							);
+						}}
+					/>
+				</View>
+			)}
+		</View>
+	);
+	// }
+};
 
-// 			{/* {isLoading && (
-// 				<FlatList
-// 					keyExtractor={(item) => item.id.toString()}
-// 					data={favCountries}
-// 					renderItem={({ item }) => {
-// 						const { country } = item;
-// 						// console.log(item);
-// 						<TouchableOpacity>
-// 							<Text>{country}</Text>
-// 						</TouchableOpacity>;
-// 					}}
-// 				/>
-// 			)} */}
+const styles = StyleSheet.create({
+	headerStyles: {
+		textAlign: "center",
+		alignItems: "center",
+		padding: 5,
+		marginTop: 5,
+		marginBottom: 5,
+		fontSize: 25,
+		fontWeight: "bold",
+	},
+});
 
-// 			{/* <Button title="press" onPress={console.log(favCountries)} /> */}
-// 		</View>
-// 	);
-// 	// }
-// };
-
-// export default FavouriteCountries;
-
-// // 				<TouchableOpacity
-// // 				// onPress={() =>
-// // 				// 	navigation.navigate("Country Stats", {
-// // 				// 		country: AsyncStorage.getItem(countryKey),
-// // 				// 	})
-// // 				// }
-// // 				>
-// // 					{country}
-// // 				</TouchableOpacity>
-// // 			);
-// // 		}}
-// // 	/>
-// // )}
+export default FavouriteCountries;

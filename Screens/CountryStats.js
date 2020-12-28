@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Text, ActivityIndicator, StyleSheet, Alert } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Card } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -11,9 +11,13 @@ const CountryStats = ({ route, navigation }) => {
 	const [population, setPopulation] = useState(0);
 
 	const saveCountry = async () => {
-		console.log("saving");
 		await AsyncStorage.setItem(`@${country}key`, country);
-		console.log("saving done");
+		Alert.alert(
+			"Saving Done!",
+			`${country} saved in favourite countries`,
+			[{ text: "OK", onPress: () => console.log("OK Pressed") }],
+			{ cancelable: false }
+		);
 	};
 
 	React.useLayoutEffect(() => {
@@ -66,7 +70,6 @@ const CountryStats = ({ route, navigation }) => {
 			}
 		);
 		const populationData = await countryPopulation.json();
-		// console.log(population);
 		setPopulation(populationData.body.population);
 	};
 
