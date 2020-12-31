@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CountryStats = ({ route, navigation }) => {
 	const country = route.params.country;
+
 	const [countryData, setCountryData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [population, setPopulation] = useState(0);
@@ -33,6 +34,7 @@ const CountryStats = ({ route, navigation }) => {
 
 	React.useLayoutEffect(() => {
 		navigation.setOptions({
+			title: country,
 			headerRight: () => (
 				<View style={{ margin: 18 }}>
 					<Ionicons

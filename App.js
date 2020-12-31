@@ -59,6 +59,7 @@ const CountryStack = () => {
 	return (
 		<Stack.Navigator
 			screenOptions={({ navigation }) => ({
+				title: "Covid-19",
 				headerLeft: () => (
 					<View>
 						<Ionicons
@@ -96,6 +97,7 @@ const FavouriteStack = () => {
 	return (
 		<Stack.Navigator
 			screenOptions={({ navigation }) => ({
+				title: "Covid-19",
 				headerLeft: () => (
 					<View>
 						<Ionicons
@@ -136,6 +138,7 @@ const GlobalStack = () => {
 	return (
 		<Stack.Navigator
 			screenOptions={({ navigation }) => ({
+				title: "Covid-19",
 				headerLeft: () => (
 					<View>
 						<Ionicons
